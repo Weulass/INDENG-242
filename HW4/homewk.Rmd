@@ -1,0 +1,399 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+
+Homework 4: StackOverflow
+
+Load Packages
+```{r}
+
+library(ggplot2) #for visu
+library(GGally)
+
+library(boot)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(MASS)
+library(caTools)
+library(dplyr)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+library(caret)
+library(tm.plugin.webmining)
+library(ROCR)
+```
+
+
+
+Question a): Cleaning up the dataset 
+
+Function to compute accuracy of a classification model
+```{r}
+tableAccuracy <- function(test, pred) {
+  t = table(test, pred)
+  a = sum(diag(t))/length(test)
+  return(a)
+}
+
+```
+
+```{r}
+metric <- function(test, pred) {
+  t = table(test, pred)
+  a = sum(diag(t))/length(test)
+  TPR = t[2,2]/(t[2,2]+t[2,1])
+  FPR = t[1,2]/(t[1,2]+t[1,1])
+  return(c(TPR,FPR))
+}
+```
+
+
+Load the data set
+```{r}
+Questions = read.csv("ggplot2questions2016_17.csv", stringsAsFactors=FALSE)
+```
+
+Create corpuses of the Title and the body 
+```{r}
+Qtitle = Corpus(VectorSource(Questions$Title))
+Qbody = Corpus(VectorSource(Questions$Body))
+
+strwrap(Qbody[[1]])
+```
+
+Remove the lower cases and html tags (around 10 min )
+Also remove all the numbers. They are irrelevant because there is a randomness of their values specific to the user's problem/answer  
+```{r}
+
+Qtitle = tm_map(Qtitle, tolower)
+Qbody = tm_map(Qbody, tolower )
+
+for(i in 1:length(Qbody)) {
+  Qbody[[i]] <- gsub("\\d+","\\s",Qbody[[i]])
+  Qtitle[[i]] <- gsub("\\d+","\\s",Qtitle[[i]])
+  Qbody[[i]] <- extractHTMLStrip(Qbody[[i]])
+  
+}
+
+strwrap(Qbody[[1]])
+```
+
+Remove punctuation
+```{r}
+Qtitle = tm_map(Qtitle, removePunctuation)
+Qbody = tm_map(Qbody, removePunctuation)
+
+strwrap(Qbody[[1]])
+```
+
+Remove stop words, "ggplot" and "R" since it's common to all our dataset
+```{r}
+Qtitle = tm_map(Qtitle, removeWords, c("R", stopwords("english")))
+Qbody = tm_map(Qbody, removeWords, c("R", stopwords("english")))
+
+strwrap(Qbody[[1]])
+```
+
+Stem the douments
+```{r}
+Qtitle = tm_map(Qtitle, stemDocument)
+Qbody = tm_map(Qbody, stemDocument)
+strwrap(Qbody[[1]])
+```
+
+Create a word count matrix
+```{r}
+FreqTitle = DocumentTermMatrix(Qtitle)
+FreqBody = DocumentTermMatrix(Qbody)
+```
+
+
+Remove sparse words (words that appears less than 1.5%)
+```{r}
+sparseTitle = removeSparseTerms(FreqTitle, 0.985)
+sparseBody = removeSparseTerms(FreqBody, 0.985)
+```
+
+```{r}
+Essai = as.data.frame(as.matrix(sparseTitle))
+Essai2 = as.data.frame(as.matrix(sparseBody))
+```
+
+
+Merge the columns of the title that aren't in the body 
+```{r}
+Gros = Essai2
+for(i in 1:ncol(Essai2)) {
+  for(j in 1:ncol(Essai)){
+    if (names(Essai2[i]) == names(Essai[j])) {
+    Gros = Essai2[i]+ Essai[j] }  else {
+    Gros = cbind(Essai[j],Essai2) 
+    }
+  }
+}
+colnames(Gros) = make.names(colnames(Gros))
+```
+
+Add the last column with the classification useful or not 
+```{r}
+Gros$rate = as.factor(as.numeric(Questions$Score >= 1))
+```
+
+Check if there is any duplicated label in the final dataframe
+We notice that the algorithm doesn't differenciate "chart." and "chart"
+we will drop one 
+```{r}
+A = duplicated(names(Gros), incomparables = FALSE)
+pos = match(TRUE,A) 
+Gros[pos] = NULL
+
+```
+
+
+Questions 2: Building the model 
+
+First we separate the training and test set 
+```{r}
+set.seed(123)
+spl = sample.split(Gros$rate, SplitRatio = 0.7)
+question.train = filter(Gros, spl == TRUE)
+question.test = filter(Gros, spl == FALSE)
+```
+
+Baseline accuracy on the test set 
+```{r}
+x = table(question.test$rate)
+x
+base_acc = x[[1]]/sum(x)
+base_acc
+
+#Accuracy of Baseline model 0.507
+```
+
+
+Random forest we choose mtry = sqrt(ncolumns)
+```{r}
+set.seed(311)
+
+mod.rf <- randomForest(rate ~ ., data = question.train, mtry = 23, nodesize = 5, ntree = 500)
+predict.rf = predict(mod.rf, newdata = question.test)
+importance(mod.rf)
+
+table(question.test$rate, predict.rf)
+rf_acc = tableAccuracy(question.test$rate, predict.rf)
+rf_acc
+rf_param = metric(question.test$rate, predict.rf)
+rf_param
+#rf_acc = 0.58
+```
+
+
+Cart (cp cross validated)
+```{r}
+set.seed(311)
+train.cart = train(rate ~ .,
+                   data = question.train,
+                   method = "rpart",
+                   tuneGrid = data.frame(cp=seq(0, 0.4, 0.002)),
+                   trControl = trainControl(method="cv", number=10))
+train.cart
+train.cart$results
+
+ggplot(train.cart$results, aes(x = cp, y = Accuracy)) + 
+  geom_point(size = 2) + 
+  geom_line() + 
+  ylab("CV Accuracy") + 
+  theme_bw() + 
+  theme(axis.title=element_text(size=18), axis.text=element_text(size=18))
+
+mod.cart = train.cart$finalModel
+prp(mod.cart)
+
+predict.cart = predict(mod.cart, newdata = question.test, type = "class") # why no model.matrix? 
+table(question.test$rate, predict.cart)
+cart_acc = tableAccuracy(question.test$rate, predict.cart)
+cart_acc
+cart_param = metric(question.test$rate, predict.cart)
+cart_param
+# cart_acc = 0.565
+#Accuracy was used to select the optimal model using the largest value.
+#The final value used for the model was cp = 0.076.
+```
+
+Logistic Regression 
+```{r}
+train.log = glm(rate ~ ., data = question.train, family = "binomial")
+PredictLog = predict(train.log, newdata = question.test, type ="response")
+tabLog = table(question.test$rate, PredictLog > 0.5)
+tabLog
+logReg_acc = tableAccuracy(question.test$rate, PredictLog > 0.5)
+TPR = tabLog[2,2]/(tabLog[2,2]+tabLog[2,1])
+FPR = tabLog[1,2]/(tabLog[1,2]+tabLog[1,1])
+TPR
+FPR
+rocr.log.pred <- prediction(PredictLog , question.test$rate)
+logPerformance <- performance(rocr.log.pred, "tpr", "fpr")
+plot(logPerformance, colorize = TRUE)
+abline(0, 1)
+as.numeric(performance(rocr.log.pred, "auc")@y.values)
+
+
+#LogReg_acc = 0.5638393
+
+```
+
+Boosting
+```{r}
+tGrid = expand.grid(n.trees = (1:50), interaction.depth = c(1,4,8,10,12,14,20),
+                    shrinkage = 0.01, n.minobsinnode = 10)
+
+set.seed(232)
+
+train.boost <- train(rate ~ .,
+                     data = question.train,
+                     method = "gbm",
+                     tuneGrid = tGrid,
+                     trControl = trainControl(method="cv", number=5, verboseIter = TRUE),
+                     metric = "Accuracy",
+                     distribution = "bernoulli")
+train.boost
+train.boost$results
+
+ggplot(train.boost$results, aes(x = n.trees, y = Accuracy, colour = as.factor(interaction.depth))) + geom_line() + 
+  ylab("CV Accuracy") + theme_bw() + theme(axis.title=element_text(size=18), axis.text=element_text(size=18)) + 
+  scale_color_discrete(name = "interaction.depth")
+
+mod.boost = train.boost$finalModel
+
+question.test.mm = as.data.frame(model.matrix(rate ~ . +0, data = question.test))
+predict.boost = predict(mod.boost, newdata = question.test.mm, n.trees = 3000, type = "response")
+taboost = table(question.test$rate, predict.boost < 0.52) # for some reason the probabilities are flipped in gbm
+taboost
+boost_ac = tableAccuracy(question.test$rate, predict.boost < 0.52)
+boost_ac
+TPRboost = taboost[2,2]/(taboost[2,2]+taboost[2,1])
+FPRboost = taboost[1,2]/(taboost[1,2]+taboost[1,1])
+precision = taboost[2,2]/(taboost[1,2]+taboost[2,2])
+precision
+TPRboost
+FPRboost
+
+#boosting accuracy 0.58
+```
+
+Tuning parameter 'shrinkage' was held constant at a value of 0.01
+Tuning parameter 'n.minobsinnode' was held constant at a value of 10
+Accuracy was used to select the optimal model using the largest value.
+The final values used for the model were n.trees = 45, interaction.depth = 14, shrinkage = 0.01 and n.minobsinnode = 10.
+ 
+
+
+
+Now we are going to Boostrap to assess the variability of the performance metrics through boostrap
+
+```{r}
+all_metrics <- function(data, index) {
+  responses <- data$response[index]
+  predictions <- data$prediction[index]
+  accuracy = tableAccuracy(responses, predictions)
+  tab = table(responses, predictions)
+  TPR = tab[2,2]/(tab[2,2]+tab[2,1])
+  FPR = tab[1,2]/(tab[1,2]+tab[1,1])
+  return(c(accuracy,TPR,FPR))
+}
+```
+
+
+
+
+```{r}
+          ###### Random Forests ###### 
+RF_test_set = data.frame(response = question.test$rate, prediction = predict.rf)
+
+# do bootstrap
+set.seed(892)
+RF_boot <- boot(RF_test_set, all_metrics, R = 10000)
+RF_boot
+
+#Confidence interalls
+boot.ci(RF_boot, index = 1, type = "basic")
+boot.ci(RF_boot, index = 2, type = "basic")
+boot.ci(RF_boot, index = 3, type = "basic")
+```
+
+```{r}
+        ###### CART ############
+cart_test_set = data.frame(response = question.test$rate, prediction = predict.cart)
+
+# do bootstrap
+set.seed(892)
+cart_boot <- boot(cart_test_set, all_metrics, R = 10000)
+cart_boot
+
+#Confidence interalls
+boot.ci(cart_boot, index = 1, type = "basic")
+boot.ci(cart_boot, index = 2, type = "basic")
+boot.ci(cart_boot, index = 3, type = "basic")
+
+```
+      
+```{r}     
+        ###### Logistic Regression ######
+LR_test_set = data.frame(response = question.test$rate, prediction = as.numeric(PredictLog > 0.5))
+
+# do bootstrap
+set.seed(892)
+LR_boot <- boot(LR_test_set, all_metrics, R = 10000)
+LR_boot
+
+#Confidence interalls
+boot.ci(LR_boot, index = 1, type = "basic")
+boot.ci(LR_boot, index = 2, type = "basic")
+boot.ci(LR_boot, index = 3, type = "basic")
+head(LR_test_set)
+```
+
+```{r}
+        ###### Boosting ######
+boosting_test_set = data.frame(response = question.test$rate, prediction = as.numeric(predict.boost<0.5))
+
+# do bootstrap
+set.seed(892)
+boosting_boot <- boot(boosting_test_set, all_metrics, R=10000)
+
+#Confidence interalls
+boot.ci(boosting_boot, index = 1, type = "basic")
+boot.ci(boosting_boot, index = 2, type = "basic")
+boot.ci(boosting_boot, index = 3, type = "basic")
+head(boosting_test_set)
+
+```
+
+ 
+
+Part C:
+
+```{r}
+performance<-function(model){
+  moy = 0
+  for (i in c(1:3000)){
+  test=sample_n(question.test,size=15,replace = FALSE)
+  test.mm = as.data.frame(model.matrix(rate ~ . +0, data = test))
+  pred = predict(model, newdata = test.mm,n.trees=45, type = "response")
+  n=sum(as.numeric(as.numeric(test$rate ==1) & as.numeric(pred < 0.50)))
+  d = sum(as.numeric(test$rate ==1))
+  p = n/d
+  moy = moy + p
+  }
+  return (moy/3000)
+}
+eval2 = performance(mod.boost)
+eval2
+```
+
+
+

@@ -1,0 +1,1228 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Homework-3.R},
+            pdfauthor={weujo},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Homework-3.R}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{weujo}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{2019-10-16}
+
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(caTools) }\CommentTok{# splits}
+\KeywordTok{library}\NormalTok{(rpart) }\CommentTok{# CART}
+\KeywordTok{library}\NormalTok{(rpart.plot) }\CommentTok{# CART plotting}
+\KeywordTok{library}\NormalTok{(caret)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: lattice
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ROCR)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: gplots
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'gplots'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stats':
+## 
+##     lowess
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(randomForest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## randomForest 4.6-14
+\end{verbatim}
+
+\begin{verbatim}
+## Type rfNews() to see new features/changes/bug fixes.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'randomForest'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     margin
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(gbm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loaded gbm 2.1.5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(GGally)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Registered S3 method overwritten by 'GGally':
+##   method from   
+##   +.gg   ggplot2
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'GGally'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     nasa
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(MASS)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'MASS'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     select
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Letters =}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"Letters.csv"}\NormalTok{)}
+
+\CommentTok{#################################### Questions a) ##########################################################}
+
+\CommentTok{#Define a variable }
+\NormalTok{Letters}\OperatorTok{$}\NormalTok{isB =}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(Letters}\OperatorTok{$}\NormalTok{letter }\OperatorTok{==}\StringTok{ "B"}\NormalTok{)}
+\NormalTok{Letters}\OperatorTok{$}\NormalTok{letter =}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(Letters}\OperatorTok{$}\NormalTok{letter)}
+
+
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{456}\NormalTok{)}
+
+\NormalTok{train.ids =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(Letters), }\FloatTok{0.65}\OperatorTok{*}\KeywordTok{nrow}\NormalTok{(Letters))          }
+\NormalTok{Letters.train =}\StringTok{ }\NormalTok{Letters[train.ids,]}
+\NormalTok{Letters.test =}\StringTok{ }\NormalTok{Letters[}\OperatorTok{-}\NormalTok{train.ids,]}
+
+  \CommentTok{#i) Accuracy Baseline model }
+\KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{isB)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## FALSE  TRUE 
+##   788   303
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Accuracy of Baseline model = 72.22%}
+
+  \CommentTok{#ii) Logistic regression }
+\NormalTok{LogRe =}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ Letters.train, }\DataTypeTok{family =}\NormalTok{ binomial, }
+\NormalTok{            isB }\OperatorTok{~}\StringTok{ }\NormalTok{xbox}\OperatorTok{+}\NormalTok{ybox}\OperatorTok{+}\NormalTok{width}\OperatorTok{+}\NormalTok{height}\OperatorTok{+}\NormalTok{onpix}\OperatorTok{+}\NormalTok{xbar}
+            \OperatorTok{+}\NormalTok{ybar}\OperatorTok{+}\NormalTok{x2bar}\OperatorTok{+}\NormalTok{y2bar}\OperatorTok{+}\NormalTok{xybar}\OperatorTok{+}\NormalTok{x2ybar}\OperatorTok{+}\NormalTok{xy2bar}
+            \OperatorTok{+}\NormalTok{xedge}\OperatorTok{+}\NormalTok{xedgeycor}\OperatorTok{+}\NormalTok{yedge}\OperatorTok{+}\NormalTok{yedgexcor)}
+
+\KeywordTok{summary}\NormalTok{(LogRe)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = isB ~ xbox + ybox + width + height + onpix + xbar + 
+##     ybar + x2bar + y2bar + xybar + x2ybar + xy2bar + xedge + 
+##     xedgeycor + yedge + yedgexcor, family = binomial, data = Letters.train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.1461  -0.1667  -0.0212  -0.0003   3.5412  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(>|z|)    
+## (Intercept) -14.771862   2.518821  -5.865 4.50e-09 ***
+## xbox         -0.008722   0.119921  -0.073 0.942018    
+## ybox          0.063592   0.085702   0.742 0.458081    
+## width        -1.130490   0.150691  -7.502 6.28e-14 ***
+## height       -0.795831   0.138778  -5.735 9.78e-09 ***
+## onpix         0.889499   0.130406   6.821 9.04e-12 ***
+## xbar          0.546162   0.132610   4.119 3.81e-05 ***
+## ybar         -0.573137   0.113890  -5.032 4.84e-07 ***
+## x2bar        -0.334427   0.097979  -3.413 0.000642 ***
+## y2bar         1.416933   0.132082  10.728  < 2e-16 ***
+## xybar         0.290159   0.088709   3.271 0.001072 ** 
+## x2ybar        0.553462   0.124573   4.443 8.88e-06 ***
+## xy2bar       -0.377165   0.104077  -3.624 0.000290 ***
+## xedge        -0.248985   0.094499  -2.635 0.008419 ** 
+## xedgeycor     0.078641   0.101424   0.775 0.438125    
+## yedge         1.648100   0.125743  13.107  < 2e-16 ***
+## yedgexcor     0.303859   0.071467   4.252 2.12e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 2177.40  on 2024  degrees of freedom
+## Residual deviance:  643.83  on 2008  degrees of freedom
+## AIC: 677.83
+## 
+## Number of Fisher Scoring iterations: 8
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{predLogRes =}\StringTok{ }\KeywordTok{predict}\NormalTok{(LogRe, }\DataTypeTok{newdata =}\NormalTok{ Letters.test, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+
+\NormalTok{(}\DataTypeTok{tab_Log_Reg =} \KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{isB, predLogRes }\OperatorTok{>}\StringTok{ }\FloatTok{0.5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        
+##         FALSE TRUE
+##   FALSE   760   28
+##   TRUE     30  273
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{Accuracy_LogRes =} \KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(tab_Log_Reg))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(tab_Log_Reg))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9468378
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Accuracy Logistic Regression = 0.9468}
+
+  \CommentTok{#iii) AUC curve}
+
+\NormalTok{rocr.B <-}\StringTok{ }\KeywordTok{prediction}\NormalTok{(predLogRes, Letters.test}\OperatorTok{$}\NormalTok{isB)}
+\NormalTok{logPerformance <-}\StringTok{ }\KeywordTok{performance}\NormalTok{(rocr.B, }\StringTok{"tpr"}\NormalTok{, }\StringTok{"fpr"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(logPerformance, }\DataTypeTok{colorize =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework-3_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{performance}\NormalTok{(rocr.B, }\StringTok{"auc"}\NormalTok{)}\OperatorTok{@}\NormalTok{y.values)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9796661
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \CommentTok{#iv) CART }
+
+\CommentTok{#Create the different cp values}
+\NormalTok{cpVals =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{cp =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{.04}\NormalTok{, }\DataTypeTok{by=}\NormalTok{.}\DecValTok{002}\NormalTok{))}
+
+\CommentTok{# First standard CV with respect to Accuracy, then the loss function}
+\CommentTok{# Syntax below: }
+\CommentTok{# method = specify classification method, "rpart" for CART}
+\CommentTok{# tuneGrid = gives the sequence of parameters to try, }
+\CommentTok{#             in this case, we try cp = 0 through cp=0.1 in increments of .002}
+\CommentTok{# trControl = here using 10-fold cross validation}
+\CommentTok{# metric = "Accuracy" for classification accuracy, "RMSE" or "Rsquared" or for regression}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{456}\NormalTok{)}
+
+\NormalTok{cart =}\StringTok{ }\KeywordTok{train}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ Letters.train, }
+\NormalTok{             isB }\OperatorTok{~}\StringTok{ }\NormalTok{xbox}\OperatorTok{+}\NormalTok{ybox}\OperatorTok{+}\NormalTok{width}\OperatorTok{+}\NormalTok{height}\OperatorTok{+}\NormalTok{onpix}\OperatorTok{+}\NormalTok{xbar}
+             \OperatorTok{+}\NormalTok{ybar}\OperatorTok{+}\NormalTok{x2bar}\OperatorTok{+}\NormalTok{y2bar}\OperatorTok{+}\NormalTok{xybar}\OperatorTok{+}\NormalTok{x2ybar}\OperatorTok{+}\NormalTok{xy2bar}
+             \OperatorTok{+}\NormalTok{xedge}\OperatorTok{+}\NormalTok{xedgeycor}\OperatorTok{+}\NormalTok{yedge}\OperatorTok{+}\NormalTok{yedgexcor,}
+             \DataTypeTok{method=}\StringTok{"rpart"}\NormalTok{,}
+             \DataTypeTok{tuneGrid =}\NormalTok{ cpVals,}
+             \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number=}\DecValTok{10}\NormalTok{),}
+             \DataTypeTok{metric =} \StringTok{"Accuracy"}\NormalTok{)}
+
+\NormalTok{cart}\OperatorTok{$}\NormalTok{results}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       cp  Accuracy     Kappa AccuracySD    KappaSD
+## 1  0.000 0.9288808 0.7965113 0.01173843 0.03550130
+## 2  0.002 0.9303562 0.7992127 0.01113860 0.03526855
+## 3  0.004 0.9323291 0.8035912 0.01349500 0.04165801
+## 4  0.006 0.9313341 0.8001766 0.01650161 0.04991164
+## 5  0.008 0.9293564 0.7945132 0.01542265 0.04671540
+## 6  0.010 0.9293564 0.7947661 0.01542265 0.04699043
+## 7  0.012 0.9293564 0.7951796 0.01506539 0.04540563
+## 8  0.014 0.9234328 0.7763637 0.01613831 0.05016130
+## 9  0.016 0.9194773 0.7642975 0.01679198 0.05120868
+## 10 0.018 0.9150267 0.7501105 0.01773721 0.05561726
+## 11 0.020 0.9140318 0.7484028 0.02117764 0.06284918
+## 12 0.022 0.9115541 0.7413632 0.02331446 0.06883947
+## 13 0.024 0.9090788 0.7352176 0.02738755 0.08128115
+## 14 0.026 0.9090788 0.7352176 0.02738755 0.08128115
+## 15 0.028 0.9090788 0.7355621 0.02738755 0.08146015
+## 16 0.030 0.9095714 0.7371354 0.02796304 0.08325379
+## 17 0.032 0.9080887 0.7319975 0.02709237 0.08027006
+## 18 0.034 0.9080887 0.7291082 0.02709237 0.08045261
+## 19 0.036 0.9041284 0.7128185 0.02791134 0.08868432
+## 20 0.038 0.8977218 0.6892450 0.02718316 0.08979698
+## 21 0.040 0.8868649 0.6449299 0.02179497 0.07262781
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cart}\OperatorTok{$}\NormalTok{bestTune          }\CommentTok{#After Cross validation cp = 0.004}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      cp
+## 3 0.004
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cartBest =}\StringTok{ }\NormalTok{cart}\OperatorTok{$}\NormalTok{finalModel}
+\KeywordTok{prp}\NormalTok{(cartBest, }\DataTypeTok{digits=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework-3_files/figure-latex/unnamed-chunk-1-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#We extract the matrix since caret doesn't work with factor varibles }
+\NormalTok{Letters.test.ma =}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{model.matrix}\NormalTok{(isB}\OperatorTok{~}\NormalTok{.}\OperatorTok{+}\DecValTok{0}\NormalTok{, }\DataTypeTok{data=}\NormalTok{Letters.test))}
+
+\NormalTok{predCart =}\StringTok{ }\KeywordTok{predict}\NormalTok{(cartBest, }\DataTypeTok{newdata=}\NormalTok{Letters.test.ma, }\DataTypeTok{type=}\StringTok{"class"}\NormalTok{)}
+\KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{isB,predCart )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        predCart
+##         FALSE TRUE
+##   FALSE   768   20
+##   TRUE     62  241
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{tab_cart =} \KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{isB, predCart))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        predCart
+##         FALSE TRUE
+##   FALSE   768   20
+##   TRUE     62  241
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{Accuracy_cart =} \KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(tab_cart))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(tab_cart))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9248396
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Accuracy CART = 0.924}
+
+
+  \CommentTok{#v) Random Forest }
+
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{456}\NormalTok{)}
+\NormalTok{rf <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ Letters.train, }
+\NormalTok{            isB }\OperatorTok{~}\StringTok{ }\NormalTok{xbox}\OperatorTok{+}\NormalTok{ybox}\OperatorTok{+}\NormalTok{width}\OperatorTok{+}\NormalTok{height}\OperatorTok{+}\NormalTok{onpix}\OperatorTok{+}\NormalTok{xbar}
+            \OperatorTok{+}\NormalTok{ybar}\OperatorTok{+}\NormalTok{x2bar}\OperatorTok{+}\NormalTok{y2bar}\OperatorTok{+}\NormalTok{xybar}\OperatorTok{+}\NormalTok{x2ybar}\OperatorTok{+}\NormalTok{xy2bar}
+            \OperatorTok{+}\NormalTok{xedge}\OperatorTok{+}\NormalTok{xedgeycor}\OperatorTok{+}\NormalTok{yedge}\OperatorTok{+}\NormalTok{yedgexcor,}
+            \DataTypeTok{method =} \StringTok{"rf"}\NormalTok{)}
+
+
+\NormalTok{rf}\OperatorTok{$}\NormalTok{results  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   mtry  Accuracy     Kappa  AccuracySD    KappaSD
+## 1    2 0.9652512 0.8975287 0.005332830 0.01685639
+## 2    9 0.9621189 0.8892544 0.006407679 0.02127823
+## 3   16 0.9568392 0.8743645 0.007852965 0.02472427
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Random Forest 
+## 
+## 2025 samples
+##   16 predictor
+##    2 classes: 'FALSE', 'TRUE' 
+## 
+## No pre-processing
+## Resampling: Bootstrapped (25 reps) 
+## Summary of sample sizes: 2025, 2025, 2025, 2025, 2025, 2025, ... 
+## Resampling results across tuning parameters:
+## 
+##   mtry  Accuracy   Kappa    
+##    2    0.9652512  0.8975287
+##    9    0.9621189  0.8892544
+##   16    0.9568392  0.8743645
+## 
+## Accuracy was used to select the optimal model using the largest value.
+## The final value used for the model was mtry = 2.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rf.best <-}\StringTok{ }\NormalTok{rf}\OperatorTok{$}\NormalTok{finalModel}
+\NormalTok{pred.best.rf <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(rf.best, }\DataTypeTok{newdata =}\NormalTok{ Letters.test.ma)}
+
+\KeywordTok{ggplot}\NormalTok{(rf}\OperatorTok{$}\NormalTok{results, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ mtry, }\DataTypeTok{y =}\NormalTok{ Accuracy)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{size =} \DecValTok{3}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Accuracy"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_bw}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.title=}\KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size=}\DecValTok{18}\NormalTok{), }\DataTypeTok{axis.text=}\KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size=}\DecValTok{18}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework-3_files/figure-latex/unnamed-chunk-1-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{tab_rf =} \KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{isB, pred.best.rf))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        pred.best.rf
+##         FALSE TRUE
+##   FALSE   781    7
+##   TRUE     24  279
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{Accuracy_rf =} \KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(tab_rf))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(tab_rf))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9715857
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#The Accuracy of Radom forest is 0.9715}
+
+
+
+\CommentTok{################################## Question b) ################################################################### }
+  
+  \CommentTok{#i) Baseline }
+
+\KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{letter)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##   A   B   P   R 
+## 243 303 283 262
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#The most frequent outcome is A with 546 occurences }
+
+  \CommentTok{#ii)LDA model }
+
+\NormalTok{ldam =}\StringTok{ }\KeywordTok{lda}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ Letters.train,}
+\NormalTok{           letter }\OperatorTok{~}\StringTok{ }\NormalTok{xbox}\OperatorTok{+}\NormalTok{ybox}\OperatorTok{+}\NormalTok{width}\OperatorTok{+}\NormalTok{height}\OperatorTok{+}\NormalTok{onpix}\OperatorTok{+}\NormalTok{xbar}
+           \OperatorTok{+}\NormalTok{ybar}\OperatorTok{+}\NormalTok{x2bar}\OperatorTok{+}\NormalTok{y2bar}\OperatorTok{+}\NormalTok{xybar}\OperatorTok{+}\NormalTok{x2ybar}\OperatorTok{+}\NormalTok{xy2bar}
+           \OperatorTok{+}\NormalTok{xedge}\OperatorTok{+}\NormalTok{xedgeycor}\OperatorTok{+}\NormalTok{yedge}\OperatorTok{+}\NormalTok{yedgexcor)}
+
+\NormalTok{predLda =}\StringTok{ }\KeywordTok{predict}\NormalTok{(ldam, Letters.test)}
+\NormalTok{predLda_class =}\StringTok{ }\NormalTok{predLda}\OperatorTok{$}\NormalTok{class}
+
+\NormalTok{(}\DataTypeTok{tabLda =} \KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{letter,predLda_class))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    predLda_class
+##       A   B   P   R
+##   A 227   5   1  10
+##   B   0 272   0  31
+##   P   0   6 273   4
+##   R   0  31   1 230
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{Accuracy_Lda =} \KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(tabLda))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(tabLda))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9184235
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Accuracy of Lda = 0.918}
+
+  \CommentTok{#iii) CART model + cross validation }
+
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{456}\NormalTok{)}
+
+\NormalTok{cartm =}\StringTok{ }\KeywordTok{train}\NormalTok{(letter }\OperatorTok{~}\StringTok{ }\NormalTok{xbox}\OperatorTok{+}\NormalTok{ybox}\OperatorTok{+}\NormalTok{width}\OperatorTok{+}\NormalTok{height}\OperatorTok{+}\NormalTok{onpix}\OperatorTok{+}\NormalTok{xbar}
+              \OperatorTok{+}\NormalTok{ybar}\OperatorTok{+}\NormalTok{x2bar}\OperatorTok{+}\NormalTok{y2bar}\OperatorTok{+}\NormalTok{xybar}\OperatorTok{+}\NormalTok{x2ybar}\OperatorTok{+}\NormalTok{xy2bar}
+              \OperatorTok{+}\NormalTok{xedge}\OperatorTok{+}\NormalTok{xedgeycor}\OperatorTok{+}\NormalTok{yedge}\OperatorTok{+}\NormalTok{yedgexcor,}
+              \DataTypeTok{method =} \StringTok{"rpart"}\NormalTok{,}
+              \DataTypeTok{metric =} \StringTok{"Accuracy"}\NormalTok{,}
+              \DataTypeTok{tuneGrid =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{cp =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{.1}\NormalTok{, }\DataTypeTok{by=}\NormalTok{.}\DecValTok{0001}\NormalTok{)),}
+              \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{,}\DataTypeTok{number =} \DecValTok{10}\NormalTok{),}
+              \DataTypeTok{data =}\NormalTok{ Letters.train)}
+
+\NormalTok{cartm}\OperatorTok{$}\NormalTok{bestTune}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      cp
+## 8 7e-04
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cartm_best =}\StringTok{ }\NormalTok{cartm}\OperatorTok{$}\NormalTok{finalModel}
+\KeywordTok{prp}\NormalTok{(cartm_best, }\DataTypeTok{digits=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework-3_files/figure-latex/unnamed-chunk-1-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#accuracy}
+
+\NormalTok{predCart =}\StringTok{ }\KeywordTok{predict}\NormalTok{(cartm_best, }\DataTypeTok{newdata=}\NormalTok{Letters.test.ma, }\DataTypeTok{type=}\StringTok{"class"}\NormalTok{)}
+\NormalTok{(}\DataTypeTok{tabCart =} \KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{letter,predCart))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    predCart
+##       A   B   P   R
+##   A 230   5   1   7
+##   B  10 253  10  30
+##   P   2  13 265   3
+##   R  10  27   3 222
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{Accuracy_Cart =} \KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(tabCart))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(tabCart))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.8890926
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+   \CommentTok{#Accuracy of cartm = 0.8891}
+
+
+  \CommentTok{#Iv) vanilla}
+
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{456}\NormalTok{)}
+\NormalTok{vanilla =}\StringTok{  }\KeywordTok{randomForest}\NormalTok{(letter }\OperatorTok{~}\StringTok{ }\NormalTok{xbox}\OperatorTok{+}\NormalTok{ybox}\OperatorTok{+}\NormalTok{width}\OperatorTok{+}\NormalTok{height}\OperatorTok{+}\NormalTok{onpix}\OperatorTok{+}\NormalTok{xbar}
+             \OperatorTok{+}\NormalTok{ybar}\OperatorTok{+}\NormalTok{x2bar}\OperatorTok{+}\NormalTok{y2bar}\OperatorTok{+}\NormalTok{xybar}\OperatorTok{+}\NormalTok{x2ybar}\OperatorTok{+}\NormalTok{xy2bar}
+             \OperatorTok{+}\NormalTok{xedge}\OperatorTok{+}\NormalTok{xedgeycor}\OperatorTok{+}\NormalTok{yedge}\OperatorTok{+}\NormalTok{yedgexcor, }\DataTypeTok{data =}\NormalTok{ Letters.train,}
+             \DataTypeTok{mtry =} \DecValTok{16}\NormalTok{)}
+
+
+\NormalTok{pred_vanilla =}\StringTok{ }\KeywordTok{predict}\NormalTok{(vanilla, }\DataTypeTok{newdata =}\NormalTok{ Letters.test.ma)}
+
+\NormalTok{(}\DataTypeTok{tabvanilla =} \KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{letter, pred_vanilla))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    pred_vanilla
+##       A   B   P   R
+##   A 236   4   1   2
+##   B   2 280   2  19
+##   P   0   2 278   3
+##   R   1  19   2 240
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{Accuracy_vanilla =} \KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(tabvanilla))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(tabvanilla))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9477544
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Accuracy of vanilla = 0.9477}
+
+
+
+
+  \CommentTok{#v) Random forrest multiclass }
+
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{456}\NormalTok{)}
+\NormalTok{rfm =}\StringTok{  }\KeywordTok{train}\NormalTok{(letter }\OperatorTok{~}\StringTok{ }\NormalTok{xbox}\OperatorTok{+}\NormalTok{ybox}\OperatorTok{+}\NormalTok{width}\OperatorTok{+}\NormalTok{height}\OperatorTok{+}\NormalTok{onpix}\OperatorTok{+}\NormalTok{xbar}
+            \OperatorTok{+}\NormalTok{ybar}\OperatorTok{+}\NormalTok{x2bar}\OperatorTok{+}\NormalTok{y2bar}\OperatorTok{+}\NormalTok{xybar}\OperatorTok{+}\NormalTok{x2ybar}\OperatorTok{+}\NormalTok{xy2bar}
+            \OperatorTok{+}\NormalTok{xedge}\OperatorTok{+}\NormalTok{xedgeycor}\OperatorTok{+}\NormalTok{yedge}\OperatorTok{+}\NormalTok{yedgexcor, }\DataTypeTok{data =}\NormalTok{ Letters.train,}
+            \DataTypeTok{method =} \StringTok{"rf"}\NormalTok{,}
+            \DataTypeTok{tuneGrid =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{mtry=}\DecValTok{1}\OperatorTok{:}\DecValTok{16}\NormalTok{),}
+            \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method=}\StringTok{"cv"}\NormalTok{, }\DataTypeTok{number=}\DecValTok{10}\NormalTok{, }\DataTypeTok{verboseIter =} \OtherTok{TRUE}\NormalTok{),}
+            \DataTypeTok{metric =} \StringTok{"Accuracy"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## + Fold01: mtry= 1 
+## - Fold01: mtry= 1 
+## + Fold01: mtry= 2 
+## - Fold01: mtry= 2 
+## + Fold01: mtry= 3 
+## - Fold01: mtry= 3 
+## + Fold01: mtry= 4 
+## - Fold01: mtry= 4 
+## + Fold01: mtry= 5 
+## - Fold01: mtry= 5 
+## + Fold01: mtry= 6 
+## - Fold01: mtry= 6 
+## + Fold01: mtry= 7 
+## - Fold01: mtry= 7 
+## + Fold01: mtry= 8 
+## - Fold01: mtry= 8 
+## + Fold01: mtry= 9 
+## - Fold01: mtry= 9 
+## + Fold01: mtry=10 
+## - Fold01: mtry=10 
+## + Fold01: mtry=11 
+## - Fold01: mtry=11 
+## + Fold01: mtry=12 
+## - Fold01: mtry=12 
+## + Fold01: mtry=13 
+## - Fold01: mtry=13 
+## + Fold01: mtry=14 
+## - Fold01: mtry=14 
+## + Fold01: mtry=15 
+## - Fold01: mtry=15 
+## + Fold01: mtry=16 
+## - Fold01: mtry=16 
+## + Fold02: mtry= 1 
+## - Fold02: mtry= 1 
+## + Fold02: mtry= 2 
+## - Fold02: mtry= 2 
+## + Fold02: mtry= 3 
+## - Fold02: mtry= 3 
+## + Fold02: mtry= 4 
+## - Fold02: mtry= 4 
+## + Fold02: mtry= 5 
+## - Fold02: mtry= 5 
+## + Fold02: mtry= 6 
+## - Fold02: mtry= 6 
+## + Fold02: mtry= 7 
+## - Fold02: mtry= 7 
+## + Fold02: mtry= 8 
+## - Fold02: mtry= 8 
+## + Fold02: mtry= 9 
+## - Fold02: mtry= 9 
+## + Fold02: mtry=10 
+## - Fold02: mtry=10 
+## + Fold02: mtry=11 
+## - Fold02: mtry=11 
+## + Fold02: mtry=12 
+## - Fold02: mtry=12 
+## + Fold02: mtry=13 
+## - Fold02: mtry=13 
+## + Fold02: mtry=14 
+## - Fold02: mtry=14 
+## + Fold02: mtry=15 
+## - Fold02: mtry=15 
+## + Fold02: mtry=16 
+## - Fold02: mtry=16 
+## + Fold03: mtry= 1 
+## - Fold03: mtry= 1 
+## + Fold03: mtry= 2 
+## - Fold03: mtry= 2 
+## + Fold03: mtry= 3 
+## - Fold03: mtry= 3 
+## + Fold03: mtry= 4 
+## - Fold03: mtry= 4 
+## + Fold03: mtry= 5 
+## - Fold03: mtry= 5 
+## + Fold03: mtry= 6 
+## - Fold03: mtry= 6 
+## + Fold03: mtry= 7 
+## - Fold03: mtry= 7 
+## + Fold03: mtry= 8 
+## - Fold03: mtry= 8 
+## + Fold03: mtry= 9 
+## - Fold03: mtry= 9 
+## + Fold03: mtry=10 
+## - Fold03: mtry=10 
+## + Fold03: mtry=11 
+## - Fold03: mtry=11 
+## + Fold03: mtry=12 
+## - Fold03: mtry=12 
+## + Fold03: mtry=13 
+## - Fold03: mtry=13 
+## + Fold03: mtry=14 
+## - Fold03: mtry=14 
+## + Fold03: mtry=15 
+## - Fold03: mtry=15 
+## + Fold03: mtry=16 
+## - Fold03: mtry=16 
+## + Fold04: mtry= 1 
+## - Fold04: mtry= 1 
+## + Fold04: mtry= 2 
+## - Fold04: mtry= 2 
+## + Fold04: mtry= 3 
+## - Fold04: mtry= 3 
+## + Fold04: mtry= 4 
+## - Fold04: mtry= 4 
+## + Fold04: mtry= 5 
+## - Fold04: mtry= 5 
+## + Fold04: mtry= 6 
+## - Fold04: mtry= 6 
+## + Fold04: mtry= 7 
+## - Fold04: mtry= 7 
+## + Fold04: mtry= 8 
+## - Fold04: mtry= 8 
+## + Fold04: mtry= 9 
+## - Fold04: mtry= 9 
+## + Fold04: mtry=10 
+## - Fold04: mtry=10 
+## + Fold04: mtry=11 
+## - Fold04: mtry=11 
+## + Fold04: mtry=12 
+## - Fold04: mtry=12 
+## + Fold04: mtry=13 
+## - Fold04: mtry=13 
+## + Fold04: mtry=14 
+## - Fold04: mtry=14 
+## + Fold04: mtry=15 
+## - Fold04: mtry=15 
+## + Fold04: mtry=16 
+## - Fold04: mtry=16 
+## + Fold05: mtry= 1 
+## - Fold05: mtry= 1 
+## + Fold05: mtry= 2 
+## - Fold05: mtry= 2 
+## + Fold05: mtry= 3 
+## - Fold05: mtry= 3 
+## + Fold05: mtry= 4 
+## - Fold05: mtry= 4 
+## + Fold05: mtry= 5 
+## - Fold05: mtry= 5 
+## + Fold05: mtry= 6 
+## - Fold05: mtry= 6 
+## + Fold05: mtry= 7 
+## - Fold05: mtry= 7 
+## + Fold05: mtry= 8 
+## - Fold05: mtry= 8 
+## + Fold05: mtry= 9 
+## - Fold05: mtry= 9 
+## + Fold05: mtry=10 
+## - Fold05: mtry=10 
+## + Fold05: mtry=11 
+## - Fold05: mtry=11 
+## + Fold05: mtry=12 
+## - Fold05: mtry=12 
+## + Fold05: mtry=13 
+## - Fold05: mtry=13 
+## + Fold05: mtry=14 
+## - Fold05: mtry=14 
+## + Fold05: mtry=15 
+## - Fold05: mtry=15 
+## + Fold05: mtry=16 
+## - Fold05: mtry=16 
+## + Fold06: mtry= 1 
+## - Fold06: mtry= 1 
+## + Fold06: mtry= 2 
+## - Fold06: mtry= 2 
+## + Fold06: mtry= 3 
+## - Fold06: mtry= 3 
+## + Fold06: mtry= 4 
+## - Fold06: mtry= 4 
+## + Fold06: mtry= 5 
+## - Fold06: mtry= 5 
+## + Fold06: mtry= 6 
+## - Fold06: mtry= 6 
+## + Fold06: mtry= 7 
+## - Fold06: mtry= 7 
+## + Fold06: mtry= 8 
+## - Fold06: mtry= 8 
+## + Fold06: mtry= 9 
+## - Fold06: mtry= 9 
+## + Fold06: mtry=10 
+## - Fold06: mtry=10 
+## + Fold06: mtry=11 
+## - Fold06: mtry=11 
+## + Fold06: mtry=12 
+## - Fold06: mtry=12 
+## + Fold06: mtry=13 
+## - Fold06: mtry=13 
+## + Fold06: mtry=14 
+## - Fold06: mtry=14 
+## + Fold06: mtry=15 
+## - Fold06: mtry=15 
+## + Fold06: mtry=16 
+## - Fold06: mtry=16 
+## + Fold07: mtry= 1 
+## - Fold07: mtry= 1 
+## + Fold07: mtry= 2 
+## - Fold07: mtry= 2 
+## + Fold07: mtry= 3 
+## - Fold07: mtry= 3 
+## + Fold07: mtry= 4 
+## - Fold07: mtry= 4 
+## + Fold07: mtry= 5 
+## - Fold07: mtry= 5 
+## + Fold07: mtry= 6 
+## - Fold07: mtry= 6 
+## + Fold07: mtry= 7 
+## - Fold07: mtry= 7 
+## + Fold07: mtry= 8 
+## - Fold07: mtry= 8 
+## + Fold07: mtry= 9 
+## - Fold07: mtry= 9 
+## + Fold07: mtry=10 
+## - Fold07: mtry=10 
+## + Fold07: mtry=11 
+## - Fold07: mtry=11 
+## + Fold07: mtry=12 
+## - Fold07: mtry=12 
+## + Fold07: mtry=13 
+## - Fold07: mtry=13 
+## + Fold07: mtry=14 
+## - Fold07: mtry=14 
+## + Fold07: mtry=15 
+## - Fold07: mtry=15 
+## + Fold07: mtry=16 
+## - Fold07: mtry=16 
+## + Fold08: mtry= 1 
+## - Fold08: mtry= 1 
+## + Fold08: mtry= 2 
+## - Fold08: mtry= 2 
+## + Fold08: mtry= 3 
+## - Fold08: mtry= 3 
+## + Fold08: mtry= 4 
+## - Fold08: mtry= 4 
+## + Fold08: mtry= 5 
+## - Fold08: mtry= 5 
+## + Fold08: mtry= 6 
+## - Fold08: mtry= 6 
+## + Fold08: mtry= 7 
+## - Fold08: mtry= 7 
+## + Fold08: mtry= 8 
+## - Fold08: mtry= 8 
+## + Fold08: mtry= 9 
+## - Fold08: mtry= 9 
+## + Fold08: mtry=10 
+## - Fold08: mtry=10 
+## + Fold08: mtry=11 
+## - Fold08: mtry=11 
+## + Fold08: mtry=12 
+## - Fold08: mtry=12 
+## + Fold08: mtry=13 
+## - Fold08: mtry=13 
+## + Fold08: mtry=14 
+## - Fold08: mtry=14 
+## + Fold08: mtry=15 
+## - Fold08: mtry=15 
+## + Fold08: mtry=16 
+## - Fold08: mtry=16 
+## + Fold09: mtry= 1 
+## - Fold09: mtry= 1 
+## + Fold09: mtry= 2 
+## - Fold09: mtry= 2 
+## + Fold09: mtry= 3 
+## - Fold09: mtry= 3 
+## + Fold09: mtry= 4 
+## - Fold09: mtry= 4 
+## + Fold09: mtry= 5 
+## - Fold09: mtry= 5 
+## + Fold09: mtry= 6 
+## - Fold09: mtry= 6 
+## + Fold09: mtry= 7 
+## - Fold09: mtry= 7 
+## + Fold09: mtry= 8 
+## - Fold09: mtry= 8 
+## + Fold09: mtry= 9 
+## - Fold09: mtry= 9 
+## + Fold09: mtry=10 
+## - Fold09: mtry=10 
+## + Fold09: mtry=11 
+## - Fold09: mtry=11 
+## + Fold09: mtry=12 
+## - Fold09: mtry=12 
+## + Fold09: mtry=13 
+## - Fold09: mtry=13 
+## + Fold09: mtry=14 
+## - Fold09: mtry=14 
+## + Fold09: mtry=15 
+## - Fold09: mtry=15 
+## + Fold09: mtry=16 
+## - Fold09: mtry=16 
+## + Fold10: mtry= 1 
+## - Fold10: mtry= 1 
+## + Fold10: mtry= 2 
+## - Fold10: mtry= 2 
+## + Fold10: mtry= 3 
+## - Fold10: mtry= 3 
+## + Fold10: mtry= 4 
+## - Fold10: mtry= 4 
+## + Fold10: mtry= 5 
+## - Fold10: mtry= 5 
+## + Fold10: mtry= 6 
+## - Fold10: mtry= 6 
+## + Fold10: mtry= 7 
+## - Fold10: mtry= 7 
+## + Fold10: mtry= 8 
+## - Fold10: mtry= 8 
+## + Fold10: mtry= 9 
+## - Fold10: mtry= 9 
+## + Fold10: mtry=10 
+## - Fold10: mtry=10 
+## + Fold10: mtry=11 
+## - Fold10: mtry=11 
+## + Fold10: mtry=12 
+## - Fold10: mtry=12 
+## + Fold10: mtry=13 
+## - Fold10: mtry=13 
+## + Fold10: mtry=14 
+## - Fold10: mtry=14 
+## + Fold10: mtry=15 
+## - Fold10: mtry=15 
+## + Fold10: mtry=16 
+## - Fold10: mtry=16 
+## Aggregating results
+## Selecting tuning parameters
+## Fitting mtry = 6 on full training set
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#we choose mtry = 6}
+
+
+\NormalTok{rfm}\OperatorTok{$}\NormalTok{results  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    mtry  Accuracy     Kappa  AccuracySD    KappaSD
+## 1     1 0.9704064 0.9605073 0.015867590 0.02116063
+## 2     2 0.9743498 0.9657614 0.011524574 0.01538202
+## 3     3 0.9768324 0.9690768 0.012673464 0.01691206
+## 4     4 0.9768153 0.9690519 0.010875548 0.01451605
+## 5     5 0.9758251 0.9677296 0.010473764 0.01397976
+## 6     6 0.9773005 0.9696992 0.010441180 0.01393554
+## 7     7 0.9733474 0.9644244 0.009880586 0.01318845
+## 8     8 0.9718695 0.9624484 0.011839419 0.01580612
+## 9     9 0.9703843 0.9604690 0.010871510 0.01451166
+## 10   10 0.9654436 0.9538690 0.014132317 0.01887186
+## 11   11 0.9664263 0.9551823 0.012230703 0.01632938
+## 12   12 0.9604856 0.9472469 0.014154727 0.01889982
+## 13   13 0.9584931 0.9445815 0.014662338 0.01959166
+## 14   14 0.9575030 0.9432634 0.015232562 0.02034731
+## 15   15 0.9555276 0.9406204 0.016570825 0.02214100
+## 16   16 0.9545400 0.9393003 0.013461407 0.01799138
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rfm.best <-}\StringTok{ }\NormalTok{rfm}\OperatorTok{$}\NormalTok{finalModel}
+\NormalTok{pred.best.rfm <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(rfm.best, }\DataTypeTok{newdata =}\NormalTok{ Letters.test.ma) }\CommentTok{# can use same model matrix}
+
+\KeywordTok{ggplot}\NormalTok{(rfm}\OperatorTok{$}\NormalTok{results, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ mtry, }\DataTypeTok{y =}\NormalTok{ Accuracy)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{size =} \DecValTok{3}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Accuracy"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_bw}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.title=}\KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size=}\DecValTok{18}\NormalTok{), }\DataTypeTok{axis.text=}\KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size=}\DecValTok{18}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework-3_files/figure-latex/unnamed-chunk-1-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{tabrfm =} \KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{letter, pred.best.rfm))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    pred.best.rfm
+##       A   B   P   R
+##   A 238   2   1   2
+##   B   1 286   0  16
+##   P   0   2 279   2
+##   R   0  10   2 250
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{Accuracy_Cart =} \KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(tabrfm))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(tabrfm))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9651696
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Accuracy of random forest  = 0.965}
+
+
+  \CommentTok{#vi) Boosting }
+
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{456}\NormalTok{)}
+\NormalTok{boostm =}\StringTok{ }\KeywordTok{gbm}\NormalTok{(letter }\OperatorTok{~}\StringTok{ }\NormalTok{xbox}\OperatorTok{+}\NormalTok{ybox}\OperatorTok{+}\NormalTok{width}\OperatorTok{+}\NormalTok{height}\OperatorTok{+}\NormalTok{onpix}\OperatorTok{+}\NormalTok{xbar}
+             \OperatorTok{+}\NormalTok{ybar}\OperatorTok{+}\NormalTok{x2bar}\OperatorTok{+}\NormalTok{y2bar}\OperatorTok{+}\NormalTok{xybar}\OperatorTok{+}\NormalTok{x2ybar}\OperatorTok{+}\NormalTok{xy2bar}
+             \OperatorTok{+}\NormalTok{xedge}\OperatorTok{+}\NormalTok{xedgeycor}\OperatorTok{+}\NormalTok{yedge}\OperatorTok{+}\NormalTok{yedgexcor,}
+             \DataTypeTok{data =}\NormalTok{ Letters.train,}
+             \DataTypeTok{distribution =} \StringTok{"multinomial"}\NormalTok{,}\DataTypeTok{n.trees =} \DecValTok{3300}\NormalTok{,}
+             \DataTypeTok{interaction.depth =} \DecValTok{10}\NormalTok{)}
+
+
+\NormalTok{pred_boost =}\StringTok{ }\KeywordTok{predict}\NormalTok{(boostm, }\DataTypeTok{newdata =}\NormalTok{ Letters.test.ma, }\DataTypeTok{n.trees =} \DecValTok{3300}\NormalTok{, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+
+\NormalTok{pred =}\StringTok{ }\KeywordTok{apply}\NormalTok{(pred_boost,}\DecValTok{1}\NormalTok{,which.max)}
+\NormalTok{pred =}\StringTok{ }\KeywordTok{factor}\NormalTok{(pred, }\DataTypeTok{levels =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"A"}\NormalTok{,}\StringTok{"B"}\NormalTok{,}\StringTok{"P"}\NormalTok{,}\StringTok{"R"}\NormalTok{))}
+
+\NormalTok{(}\DataTypeTok{tabboost =} \KeywordTok{table}\NormalTok{(Letters.test}\OperatorTok{$}\NormalTok{letter, pred))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    pred
+##       A   B   P   R
+##   A 240   2   0   1
+##   B   0 295   0   8
+##   P   0   1 277   5
+##   R   0   5   0 257
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{Accuracy_Boost =} \KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(tabboost))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(tabboost))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.979835
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Accuracy of Boosting = 0.9798}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

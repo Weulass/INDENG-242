@@ -1,0 +1,205 @@
+
+
+```{r}
+library(softImpute)
+library(randomForest)
+library(ranger)
+library(dplyr)
+library(tidyverse)
+library(reshape2)
+```
+
+
+
+```{r}
+OSR2 <- function(predictions, train, test) {
+  SSE <- sum((test - predictions)^2)
+  SST <- sum((test - mean(train))^2)
+  r2 <- 1 - SSE/SST
+  return(r2)
+}
+```
+
+
+```{r}
+set.seed(345)
+
+ratings = read.csv("MusicRatings.csv")
+songs = read.csv("Songs.csv")
+users = read.csv("Users.csv")
+
+print(str_c("Number of users is ",nrow(users)))
+print(str_c("Number of songs is ",nrow(songs)))
+print(str_c("Range of the ratings is ",range(ratings$rating)[1]," and ", range(ratings$rating)[2]))
+N = range(ratings$rating)[2] - range(ratings$rating)[1]
+```
+
+
+```{r}
+set.seed(345)
+
+train.ids <- sample(nrow(ratings), 0.92*nrow(ratings))
+train <- ratings[train.ids,]
+test <- ratings[-train.ids,]
+
+# split training into real training and validation set
+val1.ids <- sample(nrow(train), (4/92)*nrow(train))
+val1 <- train[val1.ids,]
+train <- train[-val1.ids,]
+
+val2.ids <- sample(nrow(train), (4/88)*nrow(train))
+val2 <- train[val2.ids,]
+train <- train[-val2.ids,]
+train <- inner_join(x=train,y=songs[,c("songID","genre","year")],by="songID")
+train$genre = as.factor(train$genre)
+train$year = as.factor(train$year)
+
+val2 <- inner_join(x=val2,y=songs[,c("songID","genre","year")],by="songID")
+val2$genre = as.factor(val2$genre)
+val2$year = as.factor(val2$year)
+```
+
+
+
+```{r}
+mat.train <- Incomplete(train$userID, train$songID, train$rating)
+
+"number of parameters = 2421 * 807 = 1953747"
+"number of observations = 2421"
+```
+
+```{r}
+# Instruction of biscale()
+set.seed(345)
+mat.train.centered <- biScale(mat.train, maxit = 1000, row.scale = FALSE, col.scale = FALSE)
+# mat.train.centered is X_ij - alpha_i - beta_j
+alpha <- attr(mat.train.centered, "biScale:row")$center
+beta <- attr(mat.train.centered, "biScale:column")$center
+#center take the mean of the column
+
+```
+
+```{r}
+users <- users %>% mutate(alpha = alpha)%>% arrange(desc(alpha))
+songs <- songs %>% mutate(beta = beta) %>% arrange(desc(beta))
+test <- inner_join(x=test,y=users,by="userID")
+test <- inner_join(x=test,y=songs[,c("songID","beta","genre","year")],by="songID")
+test <- test %>% mutate(X = alpha + beta) %>% arrange(desc(X))
+test$genre = as.factor(test$genre)
+test$year = as.factor(test$year)
+```
+
+
+
+```{r}
+MAE = mean(abs(test$X - test$rating))/N
+RMSE = sqrt(mean((test$X - test$rating)^2))/N
+OSR = OSR2(test$X, train$rating, test$rating)
+print(str_c("OSR is ",OSR, " RMSE is ",RMSE, " MAE is ",MAE))
+```
+
+Question c)
+
+```{r}
+set.seed(345)
+mae.vals = rep(NA, 10)
+for (rnk in seq_len(10)) {
+  print(str_c("Trying rank.max = ", rnk))
+  mod <- softImpute(mat.train, rank.max = rnk, lambda = 0, maxit = 1000)
+  #Impute missing values for a matrix via norm regularization
+  preds <- impute(mod, val1$userID, val1$songID) 
+  #impute make prediction from an svd object
+  mae.vals[rnk] <- mean(abs(preds - val1$rating))
+}
+
+mae.val.df <- data.frame(rnk = seq_len(10), mae = mae.vals)
+ggplot(mae.val.df, aes(x = rnk, y = mae)) + geom_point(size = 3) + 
+  ylab("Validation MAE") + xlab("Number of Archetypal Users") + 
+  theme_bw() + theme(axis.title=element_text(size=18), axis.text=element_text(size=18))
+
+```
+
+```{r}
+# choose k = 6
+set.seed(345)
+mod.final <- softImpute(mat.train, rank.max = 6, lambda = 0, maxit = 1000)
+#Impute missing values for a matrix via norm regularization 
+preds <- impute(mod.final, test$userID, test$songID)
+#impute make prediction from an svd object 
+MAE_cf = mean(abs(preds - test$rating))/N
+RMSE_cf = sqrt(mean((preds - test$rating)^2))/N
+OSR_cf = OSR2(preds, train$rating, test$rating)
+
+print(str_c("OSR is ",OSR_cf, " RMSE is ",RMSE_cf, " MAE is ",MAE_cf))
+
+```
+
+d)
+
+
+
+```{r}
+#Linear regression
+
+lin.mod <- lm(rating ~ genre + year, data = train)
+summary(lin.mod)
+
+preds.lm <- predict(lin.mod, newdata = test) 
+MAE_lr = mean(abs(preds.lm - test$rating))/N
+RMSE_lr = sqrt(mean((preds.lm - test$rating)^2))/N
+OSR_lr = OSR2(preds.lm, train$rating, test$rating)
+
+print(str_c("OSR is ",OSR_lr, " RMSE is ",RMSE_lr, " MAE is ",MAE_lr))
+```
+
+
+```{r}
+#Random FOrest 
+set.seed(345)
+rf.mod <- ranger(rating ~ genre + year,
+                 data = train, 
+                 mtry = 2, 
+                 num.trees = 500,
+                 verbose = TRUE)
+
+preds.rf <- predict(rf.mod, data = test)
+preds.rf <- preds.rf$predictions
+MAE_rf = mean(abs(preds.rf - test$rating))/N
+RMSE_rf = sqrt(mean((preds.rf - test$rating)^2))/N
+OSR_rf = OSR2(preds.rf, train$rating, test$rating)
+print(str_c("OSR is ",OSR_rf, " RMSE is ",RMSE_rf, " MAE is ",MAE_rf))
+```
+
+
+
+```{r}
+# Blending
+
+val.preds.cf <- impute(mod.final, val2$userID, val2$songID)
+val.preds.lm <- predict(lin.mod, newdata = val2)
+val.preds.rf <- predict(rf.mod, data = val2)$predictions
+
+# Build validation set data frame
+val.blending_df = data.frame(rating = val2$rating, cf_preds = val.preds.cf, 
+                             lm_preds = val.preds.lm, rf_preds = val.preds.rf)
+
+# Train blended model
+blend.mod = lm(rating ~ . -1, data = val.blending_df)
+summary(blend.mod)
+
+# Get predictions on test set
+test.preds.cf <- impute(mod.final, test$userID, test$songID)
+test.preds.lm <- predict(lin.mod, newdata = test)
+test.preds.rf <- predict(rf.mod, data = test)$predictions
+
+test.blending_df = data.frame(rating = test$rating, cf_preds = test.preds.cf, 
+                              lm_preds = test.preds.lm, rf_preds = test.preds.rf)
+
+test.preds.blend <- predict(blend.mod, newdata = test.blending_df)
+
+MAE_bl = mean(abs(test.preds.blend - test$rating))/N
+RMSE_bl = sqrt(mean((test.preds.blend - test$rating)^2))/N
+OSR_bl = OSR2(test.preds.blend, train$rating, test$rating)
+print(str_c("OSR is ",OSR_bl, " RMSE is ",RMSE_bl, " MAE is ",MAE_bl))
+```
+
